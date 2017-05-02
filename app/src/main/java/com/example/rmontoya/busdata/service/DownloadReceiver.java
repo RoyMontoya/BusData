@@ -18,7 +18,7 @@ public class DownloadReceiver extends ResultReceiver {
 
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
-        if(receiver != null){
+        if (receiver != null) {
             receiver.onReceiveResult(resultCode, data);
         }
     }
