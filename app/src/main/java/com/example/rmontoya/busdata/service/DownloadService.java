@@ -1,25 +1,18 @@
 package com.example.rmontoya.busdata.service;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
-import android.database.Observable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.rmontoya.busdata.MainActivity;
 import com.example.rmontoya.busdata.bus.EventBus;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
 import cz.msebera.android.httpclient.Header;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class DownloadService extends IntentService {
@@ -33,8 +26,6 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        final ResultReceiver receiver = intent.getParcelableExtra(MainActivity.RECEIVER);
-
         AsyncHttpClient client = new SyncHttpClient();
         client.get(IMAGE_URL, new AsyncHttpResponseHandler() {
             @Override
@@ -42,11 +33,6 @@ public class DownloadService extends IntentService {
                 if (statusCode == 200) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
                     EventBus.getInstance().onNext(bitmap);
-
-
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable(BITMAP, bitmap);
-//                    receiver.send(Activity.RESULT_OK, bundle);
                 }
             }
 
