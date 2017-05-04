@@ -18,7 +18,6 @@ import cz.msebera.android.httpclient.Header;
 public class DownloadService extends IntentService {
     private static final String NAME = "DownloadService";
     private static final String IMAGE_URL = "https://goo.gl/S1lpGE";
-    public static final String BITMAP = "BITMAP";
 
     public DownloadService() {
         super(NAME);
