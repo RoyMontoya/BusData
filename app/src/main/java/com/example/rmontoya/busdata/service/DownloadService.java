@@ -3,6 +3,7 @@ package com.example.rmontoya.busdata.service;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
+import android.database.Observable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
 import cz.msebera.android.httpclient.Header;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 public class DownloadService extends IntentService {
@@ -38,7 +41,8 @@ public class DownloadService extends IntentService {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (statusCode == 200) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
-                    EventBus.getInstance().just(bitmap);
+                    EventBus.getInstance().onNext(bitmap);
+
 
 //                    Bundle bundle = new Bundle();
 //                    bundle.putParcelable(BITMAP, bitmap);

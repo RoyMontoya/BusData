@@ -15,8 +15,14 @@ import com.example.rmontoya.busdata.service.DownloadService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
+import static android.R.attr.bitmap;
 
 public class MainActivity extends AppCompatActivity implements BitmapReceiver {
 
@@ -48,8 +54,12 @@ public class MainActivity extends AppCompatActivity implements BitmapReceiver {
             }
 
             @Override
-            public void onNext(Object bitmap) {
-                mainImage.setImageBitmap((Bitmap) bitmap);
+            public void onNext(Object notificationObject) {
+                Observable.just(notificationObject)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .filter(o -> o instanceof Bitmap)
+                        .subscribe(o -> mainImage.setImageBitmap((Bitmap) o));
             }
         };
         EventBus.getInstance().subscribe(observer);
