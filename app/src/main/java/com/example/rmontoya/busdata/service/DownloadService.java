@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.rmontoya.busdata.MainActivity;
+import com.example.rmontoya.busdata.bus.EventBus;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
@@ -37,9 +38,11 @@ public class DownloadService extends IntentService {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (statusCode == 200) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(BITMAP, bitmap);
-                    receiver.send(Activity.RESULT_OK, bundle);
+                    EventBus.getInstance().just(bitmap);
+
+//                    Bundle bundle = new Bundle();
+//                    bundle.putParcelable(BITMAP, bitmap);
+//                    receiver.send(Activity.RESULT_OK, bundle);
                 }
             }
 
