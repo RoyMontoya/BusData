@@ -47,28 +47,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-
-//    private void setupObserver() {
-//        Observer<Object> mainImageObserver = new Observer<Object>() {
-//            @Override
-//            public void onCompleted() {
-//                Log.d("Observer", "Called onComplete");
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.d("Observer", e.getMessage());
-//            }
-//
-//            @Override
-//            public void onNext(Object notificationObject) {
-//                Observable.just(notificationObject)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .filter(o -> o instanceof Bitmap)
-//                        .subscribe(o -> mainImage.setImageBitmap((Bitmap) o));
-//            }
-//        };
-//        EventBus.getInstance().subscribe(mainImageObserver);
-//    }
