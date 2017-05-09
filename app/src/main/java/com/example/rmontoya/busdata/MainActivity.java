@@ -18,6 +18,7 @@ import com.example.rmontoya.busdata.receiver.DeviceBroadCastReceiver;
 import com.example.rmontoya.busdata.service.DownloadService;
 import com.jakewharton.rxbinding.view.RxView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_list)
     RecyclerView mainList;
     private BluetoothAdapter bluetoothAdapter;
-    private List<BluetoothDevice> deviceList;
+    private List<BluetoothDevice> deviceList = new ArrayList<>();
     private DeviceAdapter adapter;
 
     @Override
@@ -89,19 +90,23 @@ public class MainActivity extends AppCompatActivity {
                 Observable.just(busObject)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .filter(o -> o instanceof List) //TODO TYPE
-                        .subscribe(o -> {
-                            deviceList = (List<BluetoothDevice>) o;
-                            if (adapter == null) {
-                                adapter = new DeviceAdapter(deviceList);
-                                setupBlueToothRecyclerView();
-                            } else {
-                                adapter.notifyDataSetChanged();
-                            }
+                        .filter(object -> object instanceof BluetoothDevice)
+                        .subscribe(blueToothDevice -> {
+                            deviceList.add((BluetoothDevice) blueToothDevice);
+                            notifyAdapter();
                         });
             }
         };
         EventBus.getInstance().subscribe(blueToothObserver);
+    }
+
+    private void notifyAdapter() {
+        if (adapter == null) {
+            adapter = new DeviceAdapter(deviceList);
+            setupBlueToothRecyclerView();
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
