@@ -7,28 +7,32 @@
     tools:context="com.example.rmontoya.busdata.MainActivity">
 
     <Button
-        android:id="@+id/load_button"
-        android:layout_width="174dp"
-        android:layout_height="41dp"
+        android:id="@+id/bluetooth_button"
+        android:layout_width="130dp"
+        android:layout_height="43dp"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/standard_margin"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
         android:text="@string/bluetooth"
         app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/bluetooth_button"
-        android:layout_width="174dp"
-        android:layout_height="41dp"
+        android:id="@+id/load_button"
+        android:layout_width="130dp"
+        android:layout_height="43dp"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/standard_margin"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/load_images"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteY="452dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_list"

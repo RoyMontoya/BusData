@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 Observable.just(busObject)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .filter(o -> o instanceof List)
+                        .filter(o -> o instanceof List) //TODO TYPE
                         .subscribe(o -> {
                             deviceList = (List<BluetoothDevice>) o;
                             if (adapter == null) {

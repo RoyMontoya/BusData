@@ -16,12 +16,11 @@ import butterknife.ButterKnife;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
 
-    List<BluetoothDevice> items;
+    private List<BluetoothDevice> items;
 
     public DeviceAdapter(List<BluetoothDevice> devices) {
         this.items = devices;
     }
-
 
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
