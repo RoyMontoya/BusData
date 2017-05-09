@@ -8,27 +8,39 @@
 
     <Button
         android:id="@+id/load_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="174dp"
+        android:layout_height="41dp"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/standard_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/bluetooth"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/bluetooth_button"
+        android:layout_width="174dp"
+        android:layout_height="41dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/standard_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/load_images"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_list"
         android:layout_width="368dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="@dimen/standard_margin"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/load_button" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="@dimen/standard_margin"
+        app:layout_constraintBottom_toTopOf="@+id/load_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
