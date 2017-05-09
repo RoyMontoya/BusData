@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setViews();
-
     }
 
     private void setViews() {
@@ -77,12 +76,10 @@ public class MainActivity extends AppCompatActivity {
         Observer<Object> blueToothObserver = new Observer<Object>() {
             @Override
             public void onCompleted() {
-
             }
 
             @Override
             public void onError(Throwable e) {
-
             }
 
             @Override
@@ -108,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
-
 
     private void setUpImageRecyclerView() {
         mainList.setLayoutManager(new LinearLayoutManager(this));
