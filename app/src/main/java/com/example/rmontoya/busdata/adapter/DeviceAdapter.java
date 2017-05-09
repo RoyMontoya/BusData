@@ -2,6 +2,7 @@ package com.example.rmontoya.busdata.adapter;
 
 import android.bluetooth.BluetoothDevice;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,12 +25,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.device_row, parent, false);
+        return new DeviceViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DeviceViewHolder holder, int position) {
-
+        holder.textViewRow.setText(items.get(position).getAddress());
     }
 
     @Override
@@ -42,7 +45,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         @BindView(R.id.row_device)
         TextView textViewRow;
 
-        public DeviceViewHolder(View itemView) {
+        DeviceViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

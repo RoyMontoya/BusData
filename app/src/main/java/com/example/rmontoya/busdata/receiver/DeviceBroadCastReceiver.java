@@ -18,6 +18,7 @@ public class DeviceBroadCastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent == null) return;
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
         deviceList.add(device);
         EventBus.getInstance().onNext(deviceList);
     }

@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 
 import com.example.rmontoya.busdata.adapter.BusAdapter;
+import com.example.rmontoya.busdata.adapter.DeviceAdapter;
+import com.example.rmontoya.busdata.bus.EventBus;
 import com.example.rmontoya.busdata.receiver.DeviceBroadCastReceiver;
 import com.example.rmontoya.busdata.service.DownloadService;
 import com.jakewharton.rxbinding.view.RxView;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_list)
     RecyclerView mainList;
     private BluetoothAdapter bluetoothAdapter;
+    private List<BluetoothDevice> deviceList;
+    private DeviceAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startBlueToothScan() {
-        setupBlueToothRecyclerView();
+        setupBlueToothDeviceObserver();
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         DeviceBroadCastReceiver broadCastReceiver = new DeviceBroadCastReceiver();
         this.registerReceiver(broadCastReceiver, intentFilter);
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupBlueToothRecyclerView() {
         setupBlueToothDeviceObserver();
         mainList.setLayoutManager(new LinearLayoutManager(this));
+        mainList.setAdapter(adapter);
 
     }
 
@@ -86,11 +91,17 @@ public class MainActivity extends AppCompatActivity {
                         .observeOn(AndroidSchedulers.mainThread())
                         .filter(o -> o instanceof List)
                         .subscribe(o -> {
-
+                            deviceList = (List<BluetoothDevice>) o;
+                            if (adapter == null) {
+                                adapter = new DeviceAdapter(deviceList);
+                                setupBlueToothRecyclerView();
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
                         });
-
             }
         };
+        EventBus.getInstance().subscribe(blueToothObserver);
     }
 
 
