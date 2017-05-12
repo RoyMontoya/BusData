@@ -16,6 +16,7 @@ import com.example.rmontoya.busdata.adapter.ImageAdapter;
 import com.example.rmontoya.busdata.bus.EventBus;
 import com.example.rmontoya.busdata.model.BTdevice;
 import com.example.rmontoya.busdata.receiver.DeviceBroadCastReceiver;
+import com.example.rmontoya.busdata.receiver.DiscoveryBroadCastReceiver;
 import com.example.rmontoya.busdata.service.DownloadService;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -26,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private List<BTdevice> deviceList = new ArrayList<>();
     private DeviceAdapter adapter;
+    private String lastDevice = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,51 +49,83 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setViews();
+        setupBlueToothRecyclerView();
+        setupBroadcastReceivers();
+        setupBlueToothDeviceObserver();
+        setupDiscoveryFinishedObserver();
     }
 
     private void setViews() {
         RxView.clicks(loadButton).subscribe(aVoid -> startDownloadService());
         RxView.clicks(bluetoothButton).subscribe(aVoid -> {
-            startBlueToothScan();
+            if (!bluetoothAdapter.isDiscovering()) bluetoothAdapter.startDiscovery();
         });
     }
 
-    private void startBlueToothScan() {
-        setupBlueToothDeviceObserver();
-        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        DeviceBroadCastReceiver broadCastReceiver = new DeviceBroadCastReceiver();
-        this.registerReceiver(broadCastReceiver, intentFilter);
+    private void setupBroadcastReceivers() {
+        IntentFilter deviceIntentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        IntentFilter discoveryIntentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        DeviceBroadCastReceiver deviceBroadCastReceiver = new DeviceBroadCastReceiver();
+        DiscoveryBroadCastReceiver discoveryBroadCastReceiver = new DiscoveryBroadCastReceiver();
+        this.registerReceiver(deviceBroadCastReceiver, deviceIntentFilter);
+        this.registerReceiver(discoveryBroadCastReceiver, discoveryIntentFilter);
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
-        bluetoothAdapter.startDiscovery();
     }
 
     private void setupBlueToothRecyclerView() {
         setupBlueToothDeviceObserver();
         mainList.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new DeviceAdapter(deviceList);
         mainList.setAdapter(adapter);
-
     }
 
     private void setupBlueToothDeviceObserver() {
-        EventBus.getInstance().subscribe(o -> Observable.just(o)
+        EventBus.getInstance().subscribe(receivedObject -> Observable.just(receivedObject)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(object -> object instanceof BTdevice)
-                .subscribe(blueToothDevice -> {
-                    deviceList.add((BTdevice) blueToothDevice);
-                    notifyAdapter();
+                .filter(bTdevice -> isNotLastDevice((BTdevice) bTdevice))
+                .subscribe(bTDevice -> {
+                    BTdevice newDevice = (BTdevice) bTDevice;
+                    int index = getDeviceIndex(newDevice);
+                    if (index != -1) {
+                        deviceList.set(index, newDevice);
+                    } else {
+                        deviceList.add(newDevice);
+                    }
+                    adapter.notifyDataSetChanged();
                 }));
     }
 
 
-    private void notifyAdapter() {
-        if (adapter == null) {
-            adapter = new DeviceAdapter(deviceList);
-            setupBlueToothRecyclerView();
-        } else {
-            adapter.notifyDataSetChanged();
+    private void setupDiscoveryFinishedObserver() {
+        EventBus.getInstance().subscribe(receivedObject -> Observable.just(receivedObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(object -> object instanceof String)
+                .filter(stringAction -> stringAction.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+                .subscribe(o ->
+                        bluetoothAdapter.startDiscovery()));
+    }
+
+
+    private boolean isNotLastDevice(BTdevice bTdevice) {
+        if (lastDevice != bTdevice.getMacAddress()) {
+            lastDevice = bTdevice.getMacAddress();
+            return true;
         }
+        return false;
+    }
+
+    private int getDeviceIndex(BTdevice bTdevice) {
+        int index = -1;
+        for (int i = 0; i < deviceList.size(); i++) {
+            if (deviceList.get(i).getMacAddress().equals(bTdevice.getMacAddress())) {
+                index = i;
+            }
+        }
+        return index;
     }
 
     private void setUpImageRecyclerView() {

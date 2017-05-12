@@ -13,7 +13,6 @@ public class DeviceBroadCastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null) return;
-
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         short RSSI = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, (short) 0);
         BTdevice bTdevice = new BTdevice(device.getAddress(), RSSI);
