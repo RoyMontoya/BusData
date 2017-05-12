@@ -10,8 +10,4 @@ public class EventBus {
         return eventObservable;
     }
 
-//    public static void startObservable(Bitmap bitmap) {
-//        eventObservable.just(bitmap);
-//    }
-
 }

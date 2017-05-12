@@ -10,7 +10,8 @@ public class DiscoveryBroadCastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-         if(intent == null) return;
+        if (intent == null) return;
         EventBus.getInstance().onNext(intent.getAction());
     }
+
 }
