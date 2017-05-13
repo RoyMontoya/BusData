@@ -20,8 +20,7 @@ import rx.schedulers.Schedulers;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.BusViewHolder> {
 
-    public ImageAdapter() {
-    }
+    public ImageAdapter() {}
 
     @Override
     public BusViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,9 +31,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.BusViewHolde
     }
 
     @Override
-    public void onBindViewHolder(BusViewHolder holder, int position) {
-
-    }
+    public void onBindViewHolder(BusViewHolder holder, int position) {}
 
     @Override
     public int getItemCount() {
@@ -55,29 +52,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.BusViewHolde
         }
 
         private void setupObserver() {
-//            Observer<Object> rowObserver = new Observer<Object>() {
-//                @Override
-//                public void onCompleted() {
-//
-//                }
-//
-//                @Override
-//                public void onError(Throwable e) {
-//
-//                }
-//
-//                @Override
-//                public void onNext(Object busObject) {
-//                    imageRowSubscription = Observable.just(busObject)
-//                            .subscribeOn(Schedulers.io())
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .filter(o -> o instanceof Bitmap)
-//                            .subscribe(o -> {
-//                                imageRow.setImageBitmap((Bitmap) o);
-//                                unsubscribeRowObserver();
-//                            });
-//                }
-//            };
             EventBus.getInstance().subscribe(busObject -> imageRowSubscription = Observable.just(busObject)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

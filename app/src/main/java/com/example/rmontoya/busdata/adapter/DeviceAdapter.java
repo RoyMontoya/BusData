@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.rmontoya.busdata.R;
-import com.example.rmontoya.busdata.model.BTdevice;
+import com.example.rmontoya.busdata.model.BtDevice;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ import butterknife.ButterKnife;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
 
-    private List<BTdevice> items;
+    private List<BtDevice> items;
 
-    public DeviceAdapter(List<BTdevice> devices) {
+    public DeviceAdapter(List<BtDevice> devices) {
         this.items = devices;
     }
 
