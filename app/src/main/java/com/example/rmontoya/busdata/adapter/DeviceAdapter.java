@@ -8,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.rmontoya.busdata.R;
+import com.example.rmontoya.busdata.bus.EventBus;
 import com.example.rmontoya.busdata.model.BtDevice;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
 
@@ -32,8 +36,8 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     @Override
     public void onBindViewHolder(DeviceViewHolder holder, int position) {
-        holder.deviceAddressText.setText(items.get(position).getMacAddress());
-        holder.deviceRssiText.setText(String.valueOf(items.get(position).getRssi()));
+        holder.deviceAddressText.setText(holder.device.getMacAddress());
+        holder.deviceRssiText.setText(String.valueOf(holder.device.getRssi()));
     }
 
     @Override
@@ -47,10 +51,25 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         TextView deviceAddressText;
         @BindView(R.id.device_rssi)
         TextView deviceRssiText;
+        BtDevice device;
 
         DeviceViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            device = items.get(items.size() - 1);
+            EventBus.getInstance().subscribe(receivedObject -> Observable.just(receivedObject)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .filter(object -> object instanceof BtDevice)
+                    .filter(bTdevice -> ((BtDevice)bTdevice).getMacAddress().equals(device.getMacAddress()))
+                    .subscribe(bTDevice -> {
+                        device = (BtDevice) bTDevice;
+                        updateRssi();
+                    }));
+        }
+
+        private void updateRssi() {
+            deviceRssiText.setText(String.valueOf(device.getRssi()));
         }
 
     }

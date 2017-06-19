@@ -38,6 +38,7 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int REQUEST_ENABLE_BLUETOOTH = 1;
     @BindView(R.id.load_button)
     Button loadButton;
     @BindView(R.id.bluetooth_button)
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private DeviceAdapter adapter;
     private String lastDevice = "";
     private int REQUEST_PERMISSION = 0;
-    private static final int REQUEST_ENABLE_BLUETOOTH = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,15 +123,10 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(object -> object instanceof BtDevice)
-                .filter(bTdevice -> isNotLastDevice((BtDevice) bTdevice))
-                .subscribe(bTDevice -> {
-                    BtDevice newDevice = (BtDevice) bTDevice;
-                    int index = BtDevice.getDeviceIndex(newDevice, deviceList);
-                    if (index != -1) {
-                        deviceList.set(index, newDevice);
-                    } else {
-                        deviceList.add(newDevice);
-                    }
+                .filter(device -> isNotLastDevice((BtDevice) device))
+                .filter(device -> getDeviceIndex((BtDevice) device, deviceList) == -1)
+                .subscribe(device -> {
+                    deviceList.add((BtDevice) device);
                     adapter.notifyDataSetChanged();
                 }));
     }
@@ -163,6 +159,16 @@ public class MainActivity extends AppCompatActivity {
         setUpImageRecyclerView();
         Intent intent = new Intent(this, DownloadService.class);
         startService(intent);
+    }
+
+    private int getDeviceIndex(final BtDevice btDevice, List<BtDevice> deviceList) {
+        int index = -1;
+        for (int i = 0; i < deviceList.size(); i++) {
+            if (deviceList.get(i).equals(btDevice)) {
+                index = i;
+            }
+        }
+        return index;
     }
 
     @Override
